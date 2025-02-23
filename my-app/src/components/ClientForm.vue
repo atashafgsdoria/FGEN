@@ -27,10 +27,10 @@
     <label>Telephone Number (Office):</label>
     <input v-model="client.TelOffNum" type="text" pattern="[0-9]{10}" placeholder="0288529232" />
 
-    <label>Client's Interest on Property</label>
-    <select v-model="client.ClientInterest" required>
+    <label>Client's Interest on Property:</label>
+    <select v-model="client.InterestOnProperty" required>
       <option value="owner">Owner</option>
-      <option value="tenant">Tenant</option>
+      <option value="lessee">Lessee</option> <!-- ✅ Changed 'tenant' to 'lessee' -->
       <option value="mortgagee">Mortgagee</option>
       <option value="others">Others</option>
     </select>
@@ -46,17 +46,17 @@ export default {
     const client = ref({
       LastName: "",
       GivenName: "",
-      MiddleName: "",
+      MiddleName: null, // ✅ Allowing NULL for Middle Name
       DateOfBirth: "",
       MobileNum: "",
       EmailAdd: "",
       MailingAdd: "",
       TelResNum: "",
       TelOffNum: "",
-      ClientInterest: ""  // ✅ Added this line
+      InterestOnProperty: "" 
     });
 
-    // Restrict Date of Birth (18+ years)
+    // Restrict Date of Birth (Must be 18+ years old)
     const maxDate = computed(() => {
       const date = new Date();
       date.setFullYear(date.getFullYear() - 18);
