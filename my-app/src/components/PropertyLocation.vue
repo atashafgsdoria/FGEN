@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent>
+  <form @submit.prevent="handleSubmit">
     <label>Address:</label>
     <input v-model="property.PropertyAddress" type="text" required placeholder="Street, Building, Lot No." />
 
@@ -20,6 +20,8 @@
 
     <label>Condo Name:</label>
     <input v-model="property.PropertyCondoName" type="text" placeholder="e.g., Galeria de Magallanes" />
+
+    <button type="submit">Submit</button> <!-- Optional: Only if submission is needed -->
   </form>
 </template>
 
@@ -30,12 +32,12 @@ export default {
   props: {
     modelValue: Object, // Enables v-model binding in parent components
   },
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "submit"],
 
   setup(props, { emit }) {
     const property = ref({
       PropertyAddress: props.modelValue?.PropertyAddress || "",
-      PropertyCountry: "Philippines",
+      PropertyCountry: props.modelValue?.PropertyCountry || "Philippines",
       PropertyRegion: props.modelValue?.PropertyRegion || "",
       PropertyCity: props.modelValue?.PropertyCity || "",
       PropertyBarangay: props.modelValue?.PropertyBarangay || "",
@@ -43,12 +45,17 @@ export default {
       PropertyCondoName: props.modelValue?.PropertyCondoName || "",
     });
 
-    // Watch for changes and emit updates
+    // Watch for changes and emit a cloned object to prevent reference issues
     watch(property, (newProperty) => {
-      emit("update:modelValue", newProperty);
+      emit("update:modelValue", { ...newProperty });
     }, { deep: true });
 
-    return { property };
+    // Handle form submission (optional)
+    const handleSubmit = () => {
+      emit("submit", property.value);
+    };
+
+    return { property, handleSubmit };
   },
 };
 </script>

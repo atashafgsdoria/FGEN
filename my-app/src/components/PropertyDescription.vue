@@ -57,7 +57,6 @@
       <option value="Class A">Class A</option>
       <option value="Class B">Class B</option>
       <option value="Class C">Class C</option>
-      <option value="Homecare Compre">Homecare Compre</option>
     </select>
 
     <div v-if="typeOfConstruction">
@@ -65,7 +64,6 @@
       <p v-if="typeOfConstruction === 'Class A'">Reinforced Concrete, Concrete Hollow Blocks, Bricks...</p>
       <p v-if="typeOfConstruction === 'Class B'">Concrete and Timber, Entirely of timber...</p>
       <p v-if="typeOfConstruction === 'Class C'">Bamboo, Sawali, Nipa...</p>
-      <p v-if="typeOfConstruction === 'Homecare Compre'">Fire/Lightning, Typhoon, Flood...</p>
     </div>
 
     <h3>Other Property Information</h3>
@@ -101,7 +99,6 @@
     <input type="checkbox" v-model="riskDeclined" />
     <input v-if="riskDeclined" type="date" v-model="riskDeclinedDate" required />
     <input v-if="riskDeclined" type="text" v-model="riskDeclinedCompany" placeholder="If yes, please specify company." required />
-
   </div>
 </template>
 
@@ -111,29 +108,29 @@ export default {
     return {
       currentYear: new Date().getFullYear(),
       storey: 1,
-      yearBuilt: "",
-      floorArea: "",
+      yearBuilt: null, // 🔹 Fixed to store numbers correctly
+      floorArea: 0, // 🔹 Default to 0 to prevent errors
       roofing: "",
       roofingOther: "",
       occupancy: "",
       occupancyOther: "",
-      tenants: 0,
-      boundaryFront: "",
-      boundaryRight: "",
-      boundaryLeft: "",
-      boundaryRear: "",
+      tenants: 0, // 🔹 Use default 0 to match v-model.number
+      boundaryFront: 0,
+      boundaryRight: 0,
+      boundaryLeft: 0,
+      boundaryRear: 0,
       typeOfConstruction: "",
       locationCongestedArea: "",
       locationExplosives: "",
       locationFloodProne: "",
       fireLoss: false,
-      fireLossDate: "",
+      fireLossDate: null,
       policyCancelled: false,
       policyCancelledCompany: "",
-      policyCancelledDate: "",
+      policyCancelledDate: null,
       riskDeclined: false,
       riskDeclinedCompany: "",
-      riskDeclinedDate: ""
+      riskDeclinedDate: null
     };
   }
 };

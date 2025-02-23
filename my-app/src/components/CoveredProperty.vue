@@ -1,30 +1,46 @@
 <template>
-  <form @input="emitCoveredPropertyData" @submit.prevent>
+  <form @submit.prevent>
     <p>Enter 0 if not applicable.</p>
 
-    <label>Building Improvements:</label>
-    <input v-model.number="coveredProperty.BuildingImprovements" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Building Improvements:
+      <input v-model.number="coveredProperty.BuildingImprovements" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Household Contents:</label>
-    <input v-model.number="coveredProperty.HouseholdContents" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Household Contents:
+      <input v-model.number="coveredProperty.HouseholdContents" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Swimming Pool:</label>
-    <input v-model.number="coveredProperty.SwimmingPool" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Swimming Pool:
+      <input v-model.number="coveredProperty.SwimmingPool" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Gazebo:</label>
-    <input v-model.number="coveredProperty.Gazebo" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Gazebo:
+      <input v-model.number="coveredProperty.Gazebo" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Water Tank:</label>
-    <input v-model.number="coveredProperty.WaterTank" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Water Tank:
+      <input v-model.number="coveredProperty.WaterTank" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Pump House:</label>
-    <input v-model.number="coveredProperty.PumpHouse" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Pump House:
+      <input v-model.number="coveredProperty.PumpHouse" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Dirty Kitchen:</label>
-    <input v-model.number="coveredProperty.DirtyKitchen" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Dirty Kitchen:
+      <input v-model.number="coveredProperty.DirtyKitchen" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
 
-    <label>Concrete Fence:</label>
-    <input v-model.number="coveredProperty.ConcreteFence" type="number" min="0" step="0.01" required placeholder="Estimated Amount" />
+    <label>
+      Concrete Fence:
+      <input v-model.number="coveredProperty.ConcreteFence" type="number" min="0" step="0.01" required placeholder="Estimated Amount" @input="emitCoveredPropertyData" />
+    </label>
   </form>
 </template>
 
