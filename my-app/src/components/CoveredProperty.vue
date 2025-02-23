@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent>
+  <form @input="emitCoveredPropertyData" @submit.prevent>
     <p>Enter 0 if not applicable.</p>
 
     <label>Building Improvements:</label>
@@ -32,7 +32,8 @@
 import { ref } from "vue";
 
 export default {
-  setup() {
+  emits: ["update:data"],
+  setup(_, { emit }) {
     const coveredProperty = ref({
       BuildingImprovements: 0,
       HouseholdContents: 0,
@@ -44,7 +45,12 @@ export default {
       ConcreteFence: 0,
     });
 
-    return { coveredProperty };
+    // Emit data changes
+    const emitCoveredPropertyData = () => {
+      emit("update:data", { ...coveredProperty.value });
+    };
+
+    return { coveredProperty, emitCoveredPropertyData };
   }
 };
 </script>

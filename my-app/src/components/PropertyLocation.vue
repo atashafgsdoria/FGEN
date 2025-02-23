@@ -1,44 +1,54 @@
 <template>
-  <form>
+  <form @submit.prevent>
     <label>Address:</label>
-    <input v-model="property.PropertyAddress" type="text" required placeholder="3 Humabon, Kalakhang Maynila" />
+    <input v-model="property.PropertyAddress" type="text" required placeholder="Street, Building, Lot No." />
 
     <label>Country:</label>
-    <input v-model="property.PropertyCountry" type="text" required disabled />
+    <input v-model="property.PropertyCountry" type="text" readonly />
 
     <label>Region:</label>
-    <input v-model="property.PropertyRegion" type="text" required placeholder="NCR, Fourth District" />
+    <input v-model="property.PropertyRegion" type="text" required placeholder="e.g., NCR, Fourth District" />
 
     <label>City:</label>
-    <input v-model="property.PropertyCity" type="text" required placeholder="Makati City" />
+    <input v-model="property.PropertyCity" type="text" required placeholder="e.g., Makati City" />
 
     <label>Barangay:</label>
-    <input v-model="property.PropertyBarangay" type="text" required placeholder="Magallanes" />
+    <input v-model="property.PropertyBarangay" type="text" required placeholder="e.g., Magallanes" />
 
     <label>Village Name:</label>
-    <input v-model="property.PropertyVillageName" type="text" placeholder="Paseo de Magallanes" />
+    <input v-model="property.PropertyVillageName" type="text" placeholder="e.g., Paseo de Magallanes" />
 
     <label>Condo Name:</label>
-    <input v-model="property.PropertyCondoName" type="text" placeholder="Galeria de Magallanes" />
+    <input v-model="property.PropertyCondoName" type="text" placeholder="e.g., Galeria de Magallanes" />
   </form>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 export default {
-  setup() {
+  props: {
+    modelValue: Object, // Enables v-model binding in parent components
+  },
+  emits: ["update:modelValue"],
+
+  setup(props, { emit }) {
     const property = ref({
-      PropertyAddress: "",
-      PropertyCountry: "Philippines", // Default and uneditable
-      PropertyRegion: "",
-      PropertyCity: "",
-      PropertyBarangay: "",
-      PropertyVillageName: "",
-      PropertyCondoName: "",
+      PropertyAddress: props.modelValue?.PropertyAddress || "",
+      PropertyCountry: "Philippines",
+      PropertyRegion: props.modelValue?.PropertyRegion || "",
+      PropertyCity: props.modelValue?.PropertyCity || "",
+      PropertyBarangay: props.modelValue?.PropertyBarangay || "",
+      PropertyVillageName: props.modelValue?.PropertyVillageName || "",
+      PropertyCondoName: props.modelValue?.PropertyCondoName || "",
     });
 
+    // Watch for changes and emit updates
+    watch(property, (newProperty) => {
+      emit("update:modelValue", newProperty);
+    }, { deep: true });
+
     return { property };
-  }
+  },
 };
 </script>

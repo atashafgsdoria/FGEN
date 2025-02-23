@@ -36,15 +36,15 @@ export default {
   emits: ["update:data"],
   setup(_, { emit }) {
     const client = ref({
-      lastname: "",
-      givenname: "",
-      middlename: "",
-      dateofbirth: "",
-      mobilenum: "",
-      emailadd: "",
-      mailingadd: "",
-      telresnum: "",
-      teloffnum: ""
+      LastName: "",
+      GivenName: "",
+      MiddleName: "",
+      DateOfBirth: "",
+      MobileNum: "",
+      EmailAdd: "",
+      MailingAdd: "",
+      TelResNum: "",
+      TelOffNum: ""
     });
 
     // Restrict Date of Birth (18+ years)
