@@ -85,7 +85,10 @@ export default {
     const { data: descResponse, error: descError } = await supabase
       .from("property_description")
       .insert([this.propertyDescriptionData])
+      .select(); // ✅ Add `.select()` for consistency
+    console.log("Inserted into property_description:", descResponse);
     if (descError) throw descError;
+
 
     // ✅ Property Location Table
     const { data: locationResponse, error: locationError } = await supabase
