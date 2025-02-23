@@ -30,8 +30,21 @@ export default {
   },
   data() {
     return {
-      clientData: {},
-      propertyLocationData: {},
+      clientData: {
+        last_name: "",
+        given_name: "",
+        middle_name: "",
+        date_of_birth: "",
+        mobile_num: "",
+        email_add: "",
+        mailing_add: "",
+        tel_res_num: "",
+        tel_off_num: "",
+        interest_on_property: ""
+      },
+      propertyLocationData: {
+        property_address: ""
+      },
       coveredPropertyData: {},
       propertyDescriptionData: {},
       packagesData: {}
@@ -59,13 +72,17 @@ export default {
         console.log("Submitting data...");
 
         // 🚨 **Check for missing required fields**
-        if (!this.clientData || !this.clientData.LastName || !this.clientData.GivenName || !this.clientData.EmailAdd) {
+        if (!this.clientData?.last_name?.trim() || 
+            !this.clientData?.given_name?.trim() || 
+            !this.clientData?.email_add?.trim()) {
           alert("Client information is incomplete.");
+          console.error("Missing client fields:", this.clientData);
           return;
         }
 
-        if (!this.propertyLocationData || !this.propertyLocationData.PropertyAddress) {
+        if (!this.propertyLocationData?.property_address?.trim()) {
           alert("Property location information is incomplete.");
+          console.error("Missing property location fields:", this.propertyLocationData);
           return;
         }
 
