@@ -1,27 +1,25 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form>
     <label>Address:</label>
-    <input v-model="property.PropertyAddress" type="text" required placeholder="Street, Building, Lot No." />
+    <input v-model="property.property_address" type="text" required placeholder="Street, Building, Lot No." @input="emitPropertyData" />
 
     <label>Country:</label>
-    <input v-model="property.PropertyCountry" type="text" readonly />
+    <input v-model="property.property_country" type="text" readonly />
 
     <label>Region:</label>
-    <input v-model="property.PropertyRegion" type="text" required placeholder="e.g., NCR, Fourth District" />
+    <input v-model="property.property_region" type="text" required placeholder="e.g., NCR, Fourth District" @input="emitPropertyData" />
 
     <label>City:</label>
-    <input v-model="property.PropertyCity" type="text" required placeholder="e.g., Makati City" />
+    <input v-model="property.property_city" type="text" required placeholder="e.g., Makati City" @input="emitPropertyData" />
 
     <label>Barangay:</label>
-    <input v-model="property.PropertyBarangay" type="text" required placeholder="e.g., Magallanes" />
+    <input v-model="property.property_barangay" type="text" required placeholder="e.g., Magallanes" @input="emitPropertyData" />
 
     <label>Village Name:</label>
-    <input v-model="property.PropertyVillageName" type="text" placeholder="e.g., Paseo de Magallanes" />
+    <input v-model="property.property_village_name" type="text" placeholder="e.g., Paseo de Magallanes" @input="emitPropertyData" />
 
     <label>Condo Name:</label>
-    <input v-model="property.PropertyCondoName" type="text" placeholder="e.g., Galeria de Magallanes" />
-
-    <button type="submit">Submit</button> <!-- Optional: Only if submission is needed -->
+    <input v-model="property.property_condo_name" type="text" placeholder="e.g., Galeria de Magallanes" @input="emitPropertyData" />
   </form>
 </template>
 
@@ -32,30 +30,28 @@ export default {
   props: {
     modelValue: Object, // Enables v-model binding in parent components
   },
-  emits: ["update:modelValue", "submit"],
+  emits: ["update:data"],
 
   setup(props, { emit }) {
     const property = ref({
-      PropertyAddress: props.modelValue?.PropertyAddress || "",
-      PropertyCountry: props.modelValue?.PropertyCountry || "Philippines",
-      PropertyRegion: props.modelValue?.PropertyRegion || "",
-      PropertyCity: props.modelValue?.PropertyCity || "",
-      PropertyBarangay: props.modelValue?.PropertyBarangay || "",
-      PropertyVillageName: props.modelValue?.PropertyVillageName || "",
-      PropertyCondoName: props.modelValue?.PropertyCondoName || "",
+      property_address: props.modelValue?.property_address || "",
+      property_country: props.modelValue?.property_country || "Philippines",
+      property_region: props.modelValue?.property_region || "",
+      property_city: props.modelValue?.property_city || "",
+      property_barangay: props.modelValue?.property_barangay || "",
+      property_village_name: props.modelValue?.property_village_name || "",
+      property_condo_name: props.modelValue?.property_condo_name || "",
     });
 
-    // Watch for changes and emit a cloned object to prevent reference issues
-    watch(property, (newProperty) => {
-      emit("update:modelValue", { ...newProperty });
-    }, { deep: true });
-
-    // Handle form submission (optional)
-    const handleSubmit = () => {
-      emit("submit", property.value);
+    // Emit changes when data updates
+    const emitPropertyData = () => {
+      emit("update:data", { ...property.value });
     };
 
-    return { property, handleSubmit };
+    // Watch for deep changes and emit updates
+    watch(property, emitPropertyData, { deep: true });
+
+    return { property, emitPropertyData };
   },
 };
 </script>

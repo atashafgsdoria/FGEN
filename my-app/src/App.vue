@@ -30,35 +30,35 @@ export default {
   },
   data() {
     return {
-      clientData: null,
-      propertyLocationData: null,
-      coveredPropertyData: null,
-      propertyDescriptionData: null,
-      packagesData: null
+      clientData: {},
+      propertyLocationData: {},
+      coveredPropertyData: {},
+      propertyDescriptionData: {},
+      packagesData: {}
     };
   },
   methods: {
     updateClientData(data) {
-      this.clientData = data;
+      this.clientData = { ...data };
     },
     updatePropertyLocationData(data) {
-      this.propertyLocationData = data;
+      this.propertyLocationData = { ...data };
     },
     updateCoveredPropertyData(data) {
-      this.coveredPropertyData = data;
+      this.coveredPropertyData = { ...data };
     },
     updatePropertyDescriptionData(data) {
-      this.propertyDescriptionData = data;
+      this.propertyDescriptionData = { ...data };
     },
     updatePackagesData(data) {
-      this.packagesData = data;
+      this.packagesData = { ...data };
     },
 
     async submitForm() {
       try {
         console.log("Submitting data...");
 
-        // 🚨 **Check if required data is missing**
+        // 🚨 **Check for missing required fields**
         if (!this.clientData || !this.clientData.LastName || !this.clientData.GivenName || !this.clientData.EmailAdd) {
           alert("Client information is incomplete.");
           return;
@@ -72,57 +72,58 @@ export default {
         // ✅ **Insert into Clients Table**
         const { data: clientResponse, error: clientError } = await supabase
           .from("clients")
-          .insert([this.clientData])
+          .insert([{ ...this.clientData }])
           .select()
           .single();
 
-        if (clientError) throw clientError;
+        if (clientError) throw new Error(`Client insertion failed: ${clientError.message}`);
         console.log("Inserted into clients:", clientResponse);
 
-        const clientId = clientResponse.id;
+        const clientId = clientResponse?.id;
+        if (!clientId) throw new Error("Client ID not returned.");
 
         // ✅ **Insert into Properties Table (linked to client)**
-        this.propertyLocationData.client_id = clientId;
+        const propertyData = { ...this.propertyLocationData, client_id: clientId };
         const { data: locationResponse, error: locationError } = await supabase
           .from("properties")
-          .insert([this.propertyLocationData])
+          .insert([propertyData])
           .select()
           .single();
 
-        if (locationError) throw locationError;
+        if (locationError) throw new Error(`Property insertion failed: ${locationError.message}`);
         console.log("Inserted into properties:", locationResponse);
 
-        const locationId = locationResponse.id;
+        const locationId = locationResponse?.id;
+        if (!locationId) throw new Error("Property ID not returned.");
 
         // ✅ **Insert into Covered Properties Table**
-        this.coveredPropertyData.client_id = clientId;
-        this.coveredPropertyData.property_id = locationId;
+        const coveredPropertyData = { ...this.coveredPropertyData, client_id: clientId, property_id: locationId };
         const { data: coveredResponse, error: coveredError } = await supabase
           .from("covered_properties")
-          .insert([this.coveredPropertyData])
+          .insert([coveredPropertyData])
           .select();
 
-        if (coveredError) throw coveredError;
+        if (coveredError) throw new Error(`Covered properties insertion failed: ${coveredError.message}`);
         console.log("Inserted into covered_properties:", coveredResponse);
 
         // ✅ **Insert into Property Description Table**
-        this.propertyDescriptionData.property_id = locationId;
+        const propertyDescData = { ...this.propertyDescriptionData, property_id: locationId };
         const { data: descResponse, error: descError } = await supabase
           .from("property_description")
-          .insert([this.propertyDescriptionData])
+          .insert([propertyDescData])
           .select();
 
-        if (descError) throw descError;
+        if (descError) throw new Error(`Property description insertion failed: ${descError.message}`);
         console.log("Inserted into property_description:", descResponse);
 
         // ✅ **Insert into Packages Table**
-        this.packagesData.client_id = clientId;
+        const packageData = { ...this.packagesData, client_id: clientId };
         const { data: packageResponse, error: packageError } = await supabase
           .from("packages")
-          .insert([this.packagesData])
+          .insert([packageData])
           .select();
 
-        if (packageError) throw packageError;
+        if (packageError) throw new Error(`Packages insertion failed: ${packageError.message}`);
         console.log("Inserted into packages:", packageResponse);
 
         alert("Submission successful!");
