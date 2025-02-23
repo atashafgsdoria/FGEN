@@ -54,28 +54,54 @@ export default {
       this.packagesData = data;
     },
     async submitForm() {
-      try {
-        console.log("Submitting Data:", this.clientData, this.propertyLocationData, this.coveredPropertyData, this.propertyDescriptionData, this.packagesData);
-        
-        if (!this.clientData.LastName || this.clientData.LastName.trim() === "") {
-          throw new Error("Client data is missing 'LastName'");
-        }
-        if (!this.clientData.EmailAdd || !this.clientData.EmailAdd.includes("@")) {
-          throw new Error("Invalid or missing Email Address");
-        }
-        
-        await supabase.from('clients').insert([this.clientData]);
-        await supabase.from('property_location').insert([this.propertyLocationData]);
-        await supabase.from('covered_properties').insert([this.coveredPropertyData]);
-        await supabase.from('property_description').insert([this.propertyDescriptionData]);
-        await supabase.from('packages').insert([this.packagesData]);
-        
-        alert("Submission successful!");
-      } catch (error) {
-        console.error("Error submitting data:", error);
-        alert("Submission failed: " + (error.message || JSON.stringify(error)));
-      }
-    }
+  try {
+    console.log("Submitting data...");
+
+    // ✅ Clients Table
+    const { data: clientResponse, error: clientError } = await supabase
+      .from("clients")
+      .insert([this.clientData])
+      .select(); // Fetch inserted row
+    console.log("Inserted into clients:", clientResponse);
+    if (clientError) throw clientError;
+
+    // ✅ Covered Properties Table
+    const { data: coveredResponse, error: coveredError } = await supabase
+      .from("covered_properties")
+      .insert([this.coveredPropertyData])
+      .select();
+    console.log("Inserted into covered_properties:", coveredResponse);
+    if (coveredError) throw coveredError;
+
+    // ✅ Packages Table
+    const { data: packageResponse, error: packageError } = await supabase
+      .from("packages")
+      .insert([this.packagesData])
+      .select();
+    console.log("Inserted into packages:", packageResponse);
+    if (packageError) throw packageError;
+
+    // ✅ Property Description Table
+    const { data: descResponse, error: descError } = await supabase
+      .from("property_description")
+      .insert([this.propertyDescriptionData])
+      .select();
+    console.log("Inserted into property_description:", descResponse);
+    if (descError) throw descError;
+
+    // ✅ Property Location Table
+    const { data: locationResponse, error: locationError } = await supabase
+      .from("property_information")
+      .insert([this.propertyLocationData])
+      .select();
+    console.log("Inserted into property_information:", locationResponse);
+    if (locationError) throw locationError;
+
+    alert("Submission successful!");
+  } catch (error) {
+    console.error("Error submitting data:", error);
+    alert("Submission failed: " + (error.message || JSON.stringify(error)));
   }
+}
 };
 </script>

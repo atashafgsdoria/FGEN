@@ -26,6 +26,14 @@
 
     <label>Telephone Number (Office):</label>
     <input v-model="client.TelOffNum" type="text" pattern="[0-9]{10}" placeholder="0288529232" />
+
+    <label>Client's Interest on Property</label>
+    <select v-model="client.ClientInterest" required>
+      <option value="owner">Owner</option>
+      <option value="tenant">Tenant</option>
+      <option value="mortgagee">Mortgagee</option>
+      <option value="others">Others</option>
+    </select>
   </form>
 </template>
 
@@ -44,7 +52,8 @@ export default {
       EmailAdd: "",
       MailingAdd: "",
       TelResNum: "",
-      TelOffNum: ""
+      TelOffNum: "",
+      ClientInterest: ""  // ✅ Added this line
     });
 
     // Restrict Date of Birth (18+ years)
