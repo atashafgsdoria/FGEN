@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form @input="emitClientData">
     <label>Last Name:</label>
     <input v-model="client.LastName" type="text" required placeholder="Dela Cruz" />
 
@@ -45,29 +45,48 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 export default {
-  setup() {
-    const client = ref({
-      LastName: "",
-      GivenName: "",
-      MiddleName: "",
-      DateOfBirth: "",
-      InterestOnProperty: "",
-      MobileNum: "",
-      EmailAdd: "",
-      MailingAdd: "",
-      TelResNum: "",
-      TelOffNum: "",
-    });
+    emit("update:data", {
+    LastName: client.value.LastName, 
+    GivenName: client.value.GivenName,
+    MiddleName: client.value.MiddleName,
+    DateOfBirth: client.value.DateOfBirth,
+    InterestOnProperty: client.value.InterestOnProperty,
+    MobileNum: client.value.MobileNum,   
+    EmailAdd: client.value.EmailAdd,    
+    MailingAdd: client.value.MailingAdd,
+    TelResNum: client.value.TelResNum,
+    TelOffNum: client.value.TelOffNum
+  });
+
 
     // Restrict Date of Birth to avoid minors
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() - 18);
     const formattedMaxDate = maxDate.toISOString().split("T")[0];
 
-    return { client, maxDate: formattedMaxDate };
+    // Emit updated client data to parent
+    const emitClientData = () => {
+      emit("update:data", {
+        lastname: client.value.LastName, // Ensure lowercase key
+        givenname: client.value.GivenName,
+        middlename: client.value.MiddleName,
+        dateofbirth: client.value.DateOfBirth,
+        interestonproperty: client.value.InterestOnProperty,
+        mobilenumber: client.value.MobileNum,
+        emailaddress: client.value.EmailAdd,
+        mailingaddress: client.value.MailingAdd,
+        telresnumber: client.value.TelResNum,
+        teloffnumber: client.value.TelOffNum
+      });
+    };
+
+    // Watch for changes and emit automatically
+    watch(client, emitClientData, { deep: true });
+
+    return { client, maxDate: formattedMaxDate, emitClientData };
   }
 };
 </script>

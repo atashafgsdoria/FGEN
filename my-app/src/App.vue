@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      clientData: {},
+      clientData: {},  // Ensure it's an object with correct default values
       coveredPropertyData: {},
       packagesData: {},
       propertyDescriptionData: {},
@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     updateClientData(data) {
+      console.log("Received Client Data:", data); // Debugging
       this.clientData = data;
     },
     updateCoveredPropertyData(data) {
@@ -61,11 +62,16 @@ export default {
         console.log("Property Description Data:", this.propertyDescriptionData);
         console.log("Property Location Data:", this.propertyLocationData);
 
-        // 🚀 Check if required client fields are present before submitting
-        if (!this.clientData.lastname || this.clientData.lastname.trim() === "") {
-          throw new Error("Client data is missing 'lastname'");
+        // 🚀 Ensure all required client fields are present
+        if (!this.clientData.LastName || this.clientData.LastName.trim() === "") {
+          throw new Error("Client data is missing 'LastName'");
         }
 
+        if (!this.clientData.EmailAdd || !this.clientData.EmailAdd.includes("@")) {
+          throw new Error("Invalid or missing Email Address");
+        }
+
+        // ✅ Insert into Supabase with correctly formatted data
         const { error: clientError } = await supabase.from('clients').insert([this.clientData]); 
         if (clientError) throw clientError;
 
