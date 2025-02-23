@@ -12,21 +12,6 @@
     <label>Date of Birth:</label>
     <input v-model="client.DateOfBirth" type="date" required :max="maxDate" />
 
-    <label>Client's Interest on Property:</label>
-    <div>
-      <input type="radio" id="owner" value="owner" v-model="client.InterestOnProperty" required />
-      <label for="owner">Owner</label>
-
-      <input type="radio" id="lessee" value="lessee" v-model="client.InterestOnProperty" required />
-      <label for="lessee">Lessee</label>
-
-      <input type="radio" id="mortgagee" value="mortgagee" v-model="client.InterestOnProperty" required />
-      <label for="mortgagee">Mortgagee</label>
-
-      <input type="radio" id="others" value="others" v-model="client.InterestOnProperty" required />
-      <label for="others">Others</label>
-    </div>
-
     <label>Mobile Number:</label>
     <input v-model="client.MobileNum" type="text" required pattern="[0-9]{11}" placeholder="09000000000" />
 
@@ -45,48 +30,36 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref, computed } from "vue";
 
 export default {
-    emit("update:data", {
-    LastName: client.value.LastName, 
-    GivenName: client.value.GivenName,
-    MiddleName: client.value.MiddleName,
-    DateOfBirth: client.value.DateOfBirth,
-    InterestOnProperty: client.value.InterestOnProperty,
-    MobileNum: client.value.MobileNum,   
-    EmailAdd: client.value.EmailAdd,    
-    MailingAdd: client.value.MailingAdd,
-    TelResNum: client.value.TelResNum,
-    TelOffNum: client.value.TelOffNum
-  });
+  emits: ["update:data"],
+  setup(_, { emit }) {
+    const client = ref({
+      lastname: "",
+      givenname: "",
+      middlename: "",
+      dateofbirth: "",
+      mobilenum: "",
+      emailadd: "",
+      mailingadd: "",
+      telresnum: "",
+      teloffnum: ""
+    });
 
+    // Restrict Date of Birth (18+ years)
+    const maxDate = computed(() => {
+      const date = new Date();
+      date.setFullYear(date.getFullYear() - 18);
+      return date.toISOString().split("T")[0];
+    });
 
-    // Restrict Date of Birth to avoid minors
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() - 18);
-    const formattedMaxDate = maxDate.toISOString().split("T")[0];
-
-    // Emit updated client data to parent
+    // Emit client data on input change
     const emitClientData = () => {
-      emit("update:data", {
-        lastname: client.value.LastName, // Ensure lowercase key
-        givenname: client.value.GivenName,
-        middlename: client.value.MiddleName,
-        dateofbirth: client.value.DateOfBirth,
-        interestonproperty: client.value.InterestOnProperty,
-        mobilenumber: client.value.MobileNum,
-        emailaddress: client.value.EmailAdd,
-        mailingaddress: client.value.MailingAdd,
-        telresnumber: client.value.TelResNum,
-        teloffnumber: client.value.TelOffNum
-      });
+      emit("update:data", { ...client.value });
     };
 
-    // Watch for changes and emit automatically
-    watch(client, emitClientData, { deep: true });
-
-    return { client, maxDate: formattedMaxDate, emitClientData };
+    return { client, maxDate, emitClientData };
   }
 };
 </script>
