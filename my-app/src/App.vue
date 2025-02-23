@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import ClientForm from './components/ClientForm.vue';
-import PropertyLocation from './components/PropertyLocation.vue';
-import CoveredProperty from './components/CoveredProperty.vue';
-import PropertyDescription from './components/PropertyDescription.vue';
-import Packages from './components/Packages.vue';
-import { supabase } from './supabase';
+import ClientForm from "./components/ClientForm.vue";
+import PropertyLocation from "./components/PropertyLocation.vue";
+import CoveredProperty from "./components/CoveredProperty.vue";
+import PropertyDescription from "./components/PropertyDescription.vue";
+import Packages from "./components/Packages.vue";
+import { supabase } from "./supabase";
 
 export default {
   components: {
@@ -30,11 +30,11 @@ export default {
   },
   data() {
     return {
-      clientData: {},
-      propertyLocationData: {},
-      coveredPropertyData: {},
-      propertyDescriptionData: {},
-      packagesData: {}
+      clientData: null,
+      propertyLocationData: null,
+      coveredPropertyData: null,
+      propertyDescriptionData: null,
+      packagesData: null
     };
   },
   methods: {
@@ -53,12 +53,13 @@ export default {
     updatePackagesData(data) {
       this.packagesData = data;
     },
+
     async submitForm() {
       try {
         console.log("Submitting data...");
 
-        // Validation: Ensure required data is provided
-        if (!this.clientData || !this.clientData.name) {
+        // 🚨 **Check if required data is missing**
+        if (!this.clientData || !this.clientData.LastName || !this.clientData.GivenName || !this.clientData.EmailAdd) {
           alert("Client information is incomplete.");
           return;
         }
@@ -68,7 +69,7 @@ export default {
           return;
         }
 
-        // ✅ Insert into Clients Table
+        // ✅ **Insert into Clients Table**
         const { data: clientResponse, error: clientError } = await supabase
           .from("clients")
           .insert([this.clientData])
@@ -78,22 +79,22 @@ export default {
         if (clientError) throw clientError;
         console.log("Inserted into clients:", clientResponse);
 
-        const clientId = clientResponse.id; // Get inserted client ID
+        const clientId = clientResponse.id;
 
-        // ✅ Insert into Property Location Table (linked to client)
+        // ✅ **Insert into Properties Table (linked to client)**
         this.propertyLocationData.client_id = clientId;
         const { data: locationResponse, error: locationError } = await supabase
-          .from("property_location")
+          .from("properties")
           .insert([this.propertyLocationData])
           .select()
           .single();
 
         if (locationError) throw locationError;
-        console.log("Inserted into property_location:", locationResponse);
+        console.log("Inserted into properties:", locationResponse);
 
-        const locationId = locationResponse.id; // Get property location ID
+        const locationId = locationResponse.id;
 
-        // ✅ Insert into Covered Properties Table (linked to client)
+        // ✅ **Insert into Covered Properties Table**
         this.coveredPropertyData.client_id = clientId;
         this.coveredPropertyData.property_id = locationId;
         const { data: coveredResponse, error: coveredError } = await supabase
@@ -104,7 +105,7 @@ export default {
         if (coveredError) throw coveredError;
         console.log("Inserted into covered_properties:", coveredResponse);
 
-        // ✅ Insert into Property Description Table
+        // ✅ **Insert into Property Description Table**
         this.propertyDescriptionData.property_id = locationId;
         const { data: descResponse, error: descError } = await supabase
           .from("property_description")
@@ -114,7 +115,7 @@ export default {
         if (descError) throw descError;
         console.log("Inserted into property_description:", descResponse);
 
-        // ✅ Insert into Packages Table (linked to client)
+        // ✅ **Insert into Packages Table**
         this.packagesData.client_id = clientId;
         const { data: packageResponse, error: packageError } = await supabase
           .from("packages")
