@@ -108,7 +108,7 @@ export default {
     return {
       currentYear: new Date().getFullYear(),
       storey: 1,
-      yearBuilt: null, // 🔹 Fixed to store numbers correctly
+      yearBuilt: "", // 🔹 Fixed to store numbers correctly
       floorArea: 0, // 🔹 Default to 0 to prevent errors
       roofing: "",
       roofingOther: "",
