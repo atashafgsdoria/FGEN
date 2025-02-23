@@ -18,7 +18,7 @@ import CoveredProperty from './components/CoveredProperty.vue';
 import Packages from './components/Packages.vue';
 import PropertyDescription from './components/PropertyDescription.vue';
 import PropertyLocation from './components/PropertyLocation.vue';
-import { supabase } from './supabase'; //
+import { supabase } from './supabase';
 
 export default {
   components: {
@@ -55,16 +55,31 @@ export default {
     },
     async submitForm() {
       try {
-        await supabase.from('clients').insert([this.clientData]);
-        await supabase.from('covered_properties').insert([this.coveredPropertyData]);
-        await supabase.from('packages').insert([this.packagesData]);
-        await supabase.from('property_description').insert([this.propertyDescriptionData]);
-        await supabase.from('property_location').insert([this.propertyLocationData]);
+        console.log("Client Data:", this.clientData);
+        console.log("Covered Property Data:", this.coveredPropertyData);
+        console.log("Packages Data:", this.packagesData);
+        console.log("Property Description Data:", this.propertyDescriptionData);
+        console.log("Property Location Data:", this.propertyLocationData);
+
+        const { error: clientError } = await supabase.from('clients').insert(this.clientData);
+        if (clientError) throw clientError;
+
+        const { error: coveredError } = await supabase.from('covered_properties').insert(this.coveredPropertyData);
+        if (coveredError) throw coveredError;
+
+        const { error: packageError } = await supabase.from('packages').insert(this.packagesData);
+        if (packageError) throw packageError;
+
+        const { error: descError } = await supabase.from('property_description').insert(this.propertyDescriptionData);
+        if (descError) throw descError;
+
+        const { error: locationError } = await supabase.from('property_location').insert(this.propertyLocationData);
+        if (locationError) throw locationError;
 
         alert('Submission successful!');
       } catch (error) {
         console.error('Error submitting data:', error.message);
-        alert('Submission failed. Please try again.');
+        alert('Submission failed: ' + error.message);
       }
     }
   }
